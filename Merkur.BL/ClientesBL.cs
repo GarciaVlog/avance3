@@ -26,13 +26,8 @@ namespace Merkur.BL
             listadeClientes = _contexto.Cliente.Local.ToBindingList();
 
             return listadeClientes;
-        }
-
-        //public void ObtenerClientes(Cliente cliente)
-        //{
-        //    var nuevoCliente = new Cliente();
-        //    _contexto.SaveChanges();
-        //}
+        }       
+       
 
         public BindingList<Cliente> ObtenerClientes(int id)
         {
@@ -49,8 +44,16 @@ namespace Merkur.BL
 
             return resultado;
         }
+        public Cliente ObtenerCliente(int id)
+        {
+            var cliente = new Cliente();
+            var Cliente = _contexto.Cliente.Find(id);
+            
 
-        
+            return cliente;
+        }
+
+
         public Resultado3 GuardarClientes(Cliente cliente)
         {
             var resultado2 = Validar(cliente);
@@ -59,15 +62,30 @@ namespace Merkur.BL
 
                 return resultado2;
             }
-            if (cliente.Id == 0)
-            {
-                _contexto.Cliente.Add(cliente);
-
-            }
+          
             _contexto.SaveChanges();
 
             resultado2.Exitoso = true;
             return resultado2;
+        }
+
+        public void GuardarCliente(Cliente cliente)
+        {
+            if (cliente.Id == 0)
+            {
+                _contexto.Cliente.Add(cliente);
+            }
+            else
+            {
+                var clienteExistente = _contexto.Cliente.Find(cliente.Id);
+                clienteExistente.Nombres = cliente.Nombres;
+                clienteExistente.Apellidos = cliente.Apellidos;
+                clienteExistente.Cedula = cliente.Cedula;
+                clienteExistente.Email = cliente.Email;
+                clienteExistente.Telefono = cliente.Telefono;
+            }
+            
+            _contexto.SaveChanges();
         }
         public void AgregarClientes()
         {
@@ -76,7 +94,12 @@ namespace Merkur.BL
             listadeClientes.Add(nuevoClientes);
 
         }
-
+        public void Eliminar(Cliente cliente)
+        {
+            var clienteExistente = _contexto.Cliente.Find(cliente.Id);
+            _contexto.Cliente.Remove(clienteExistente);
+            _contexto.SaveChanges();
+        }
 
         public bool EliminarClientes(int id)
         {
@@ -152,14 +175,7 @@ namespace Merkur.BL
             return _contexto.Cliente.ToList();
         }
 
-        // PAGINA WEB
-        //Eliminar
-        public void Eliminar(Cliente cliente)
-        {
-            var clienteExistente = _contexto.Cliente.Find(cliente.Id);
-            _contexto.Cliente.Remove(clienteExistente);
-            _contexto.SaveChanges();
-        }
+       
     }
 
   

@@ -9,12 +9,20 @@ namespace Merkur.Web.Controllers
 {
     public class ClientesMerkurController : Controller
     {
-        // GET: ClientesMerkur
+
+        ClientesBL clienteBL;
+
+        public ClientesMerkurController()
+        {
+            clienteBL = new ClientesBL();
+        }
+            
+            // GET: ClientesMerkur
         public ActionResult Index()
         {
-            var clienteBL = new ClientesBL();
-            var clientes = clienteBL.ObtenerClientes();
-            return View(clientes);
+            
+            var ListadeClientes = clienteBL.ObtenerClientes();
+            return View(ListadeClientes);
         }
 
         [HttpGet]
@@ -24,23 +32,22 @@ namespace Merkur.Web.Controllers
             return View(nuevoCliente);
         }
         [HttpPost]
-        public ActionResult Create(Cliente nuevoCliente)
+        public ActionResult Create(Cliente cliente)
         {
             if (ModelState.IsValid)
             {
                 var clienteBL = new ClientesBL();
-                clienteBL.GuardarClientes(nuevoCliente);
+                clienteBL.GuardarCliente(cliente);
 
                 return RedirectToAction("Index");
             }
 
-            return View(nuevoCliente);
-        }
+            return View(cliente);
+        } 
 
         public ActionResult Edit(int id)
         {
-            var clienteBL = new ClientesBL();
-            var cliente = clienteBL.ObtenerClientes(id);
+            var cliente = clienteBL.ObtenerCliente(id);
             return View(cliente);
         }
 
@@ -48,14 +55,14 @@ namespace Merkur.Web.Controllers
         public ActionResult Edit(Cliente cliente)
         {
             var clientesBL = new ClientesBL();
-            clientesBL.GuardarClientes(cliente);
+            clientesBL.GuardarCliente(cliente);
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)
         {
             var clientesBL = new ClientesBL();
-            var cliente = clientesBL.ObtenerClientes(id);
+            var cliente = clientesBL.ObtenerCliente(id);
             return View(cliente);
         }
 
@@ -69,8 +76,7 @@ namespace Merkur.Web.Controllers
         }
         public ActionResult Details(int id)
         {
-            var clientesBL = new ClientesBL();
-            var cliente = clientesBL.ObtenerClientes(id);
+            var cliente = clienteBL.ObtenerCliente(id);
             return View(cliente);
         }
     }
